@@ -1,5 +1,4 @@
 {
-  "module": "true",
   "name": "cms_headless",
   "version": "1.0.0",
   "description": "",
@@ -11,5 +10,13 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@11.0.0-rc.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1",
+    "pg": "^8.20.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "standard": "^17.1.2"
+  }
 }
