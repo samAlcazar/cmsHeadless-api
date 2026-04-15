@@ -64,3 +64,7 @@ export const buildSchemaFromFields = (fields) => {
 
   return z.object(shape)
 }
+
+export const buildPartialSchema = (fields) => {
+  return buildSchemaFromFields(fields).partial()
+}
