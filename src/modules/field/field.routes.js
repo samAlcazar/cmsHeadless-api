@@ -1,7 +1,7 @@
 // src/modules/field/field.routes.js
 
 import { Router } from 'express'
-import * as fieldController from './field.controller.js'
+import * as fieldController from './field.contoller.js'
 
 const router = Router()
 

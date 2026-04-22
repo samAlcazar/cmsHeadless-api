@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Headless CMS API - Documentación</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --bg: #0f172a;
+      --bg-card: #1e293b;
+      --bg-hover: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --green: #22c55e;
+      --blue: #3b82f6;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --purple: #a855f7;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .base-url {
+      display: inline-block;
+      background: var(--bg-card);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      font-family: monospace;
+      border: 1px solid var(--border);
+    }
+
+    .section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .section h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section h2 .icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .endpoint {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+    }
+
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .method {
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .method.post { background: var(--green); color: #000; }
+    .method.get { background: var(--blue); color: #fff; }
+    .method.patch { background: var(--yellow); color: #000; }
+    .method.delete { background: var(--red); color: #fff; }
+
+    .path {
+      font-family: monospace;
+      color: var(--text-muted);
+    }
+
+    .description {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .example {
+      background: var(--bg-card);
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      margin-top: 0.5rem;
+    }
+
+    .example pre {
+      white-space: pre-wrap;
+      color: var(--green);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .flow-step {
+      background: var(--bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .flow-step::after {
+      content: '→';
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    .flow-step:last-child::after { display: none; }
+
+    .flow-step .num {
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin: 0 auto 0.5rem;
+    }
+
+    .field-types {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .field-type {
+      background: var(--bg);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      border: 1px solid var(--border);
+    }
+
+    .curl-block {
+      background: var(--bg);
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.875rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+    }
+
+    .curl-block code {
+      color: var(--green);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th { color: var(--text-muted); font-weight: 500; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Headless CMS API</h1>
+      <p>API REST para gestión dinámica de contenido</p>
+      <div class="base-url">http://localhost:3000/api</div>
+    </header>
+
+    <section class="section">
+      <h2>📦 Recursos disponibles</h2>
+      <table>
+        <tr><th>Recurso</th><th>Endpoint</th></tr>
+        <tr><td>Content Types</td><td><code>/content-types</code></td></tr>
+        <tr><td>Fields</td><td><code>/fields</code></td></tr>
+        <tr><td>Content (entries)</td><td><code>/:contentType</code></td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2><span class="icon" style="background: var(--primary);">🧩</span> 1. Content Types</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Definen los modelos (ej: posts, products, categories)</p>
+      
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <span class="path">/content-types</span>
+        </div>
+        <div class="description">Crear un nuevo content type</div>
+        <div class="example"><pre>{
+  "name": "posts",
+  "displayName": "Posts",
+  "description": "Blog posts",
+  "isSingle": false
+}</pre></div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/content-types</span>
+        </div>
+        <div class="description">Obtener todos los content types</div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/content-types/:id</span>
+        </div>
+        <div class="description">Obtener un content type específico</div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method delete">DELETE</span>
+          <span class="path">/content-types/:id</span>
+        </div>
+        <div class="description">Eliminar un content type</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="icon" style="background: var(--purple);">🧩</span> 2. Fields</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Definen la estructura de cada content type</p>
+      
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <span class="path">/fields</span>
+        </div>
+        <div class="description">Crear un campo</div>
+        <div class="example"><pre>{
+  "contentTypeId": "UUID",
+  "name": "title",
+  "displayName": "Título",
+  "fieldType": "string",
+  "isRequired": true,
+  "position": 1
+}</pre></div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/fields/content-type/:contentTypeId</span>
+        </div>
+        <div class="description">Obtener campos de un content type</div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method patch">PATCH</span>
+          <span class="path">/fields/:id</span>
+        </div>
+        <div class="description">Actualizar un campo</div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method delete">DELETE</span>
+          <span class="path">/fields/:id</span>
+        </div>
+        <div class="description">Eliminar un campo</div>
+      </div>
+
+      <h3 style="margin-top: 1.5rem; font-size: 1rem;">🧠 Tipos de campos soportados</h3>
+      <div class="field-types">
+        <span class="field-type">string</span>
+        <span class="field-type">text</span>
+        <span class="field-type">richtext</span>
+        <span class="field-type">number</span>
+        <span class="field-type">boolean</span>
+        <span class="field-type">date</span>
+        <span class="field-type">image</span>
+        <span class="field-type">relation</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="icon" style="background: var(--green);">🧩</span> 3. Content (Entries)</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Contenido dinámico basado en contentType</p>
+      
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <span class="path">/:contentType</span>
+        </div>
+        <div class="description">Crear una entrada (ej: POST /posts)</div>
+        <div class="example"><pre>{
+  "title": "Hola mundo",
+  "content": "Mi primer post"
+}</pre></div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/:contentType</span>
+        </div>
+        <div class="description">Obtener todas las entradas</div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/:contentType/:id</span>
+        </div>
+        <div class="description">Obtener una entrada específica</div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method patch">PATCH</span>
+          <span class="path">/:contentType/:id</span>
+        </div>
+        <div class="description">Actualizar una entrada (parcial)</div>
+        <div class="example"><pre>{"title": "Nuevo título"}</pre></div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method delete">DELETE</span>
+          <span class="path">/:contentType/:id</span>
+        </div>
+        <div class="description">Eliminar una entrada (soft delete)</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="icon" style="background: var(--blue);">🔎</span> Filtros dinámicos</h2>
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/posts?title=hola</span>
+        </div>
+        <div class="description">Filtrar por campo</div>
+      </div>
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/posts?status=published</span>
+        </div>
+        <div class="description">Filtrar por estado</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="icon" style="background: var(--yellow);">🧠</span> Flujo básico</h2>
+      <div class="flow">
+        <div class="flow-step"><div class="num">1</div>Crear content type</div>
+        <div class="flow-step"><div class="num">2</div>Crear fields</div>
+        <div class="flow-step"><div class="num">3</div>Crear contenido</div>
+        <div class="flow-step"><div class="num">4</div>Consultar contenido</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><span class="icon" style="background: var(--red);">🚀</span> Ejemplo con curl</h2>
+      <div class="curl-block">
+        <code>curl -X POST http://localhost:3000/api/posts \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Hola","content":"Texto"}'</code>
+      </div>
+    </section>
+
+    <footer>
+      <p>Todo se define en la base de datos - Construye un CMS completamente dinámico</p>
+    </footer>
+  </div>
+</body>
+</html>
